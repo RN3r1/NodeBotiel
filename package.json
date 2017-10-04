@@ -1,0 +1,16 @@
+{
+  "name": "nodebotiel",
+  "version": "1.0.0",
+  "description": "Botiel hecho en NodeJS y Bootbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Blue Infinity Technologies - Rodrigo Medina",
+  "license": "ISC",
+  "dependencies": {
+    "bootbot": "^1.0.12",
+    "config": "^1.26.2",
+    "node-emoji": "^1.8.1"
+  }
+}
