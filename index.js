@@ -587,8 +587,6 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
             User.find({fb_id:user.id}, (err, mUser) => {
 
-                console.log(mUser);
-
                 if(mUser.length !== 0){
 
                     currentUser = mUser;
@@ -606,11 +604,43 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
                 }
 
+                console.log('Encontré usuario! '+mUser);
+
+                convo.set('user', currentUser);
+
+            }).then(() => {
+
+                //TODO Preguntar si crear o editar mail.
+
+                console.log('Funciona? '+convo.get('user'));
+
+                if(currentUser.email === 'mail'){
+
+                    newMail(convo);
+
+                }else{
+
+                    editMail(convo);
+
+                }
+
             });
 
-            //Preguntar si crear o editar mail.
+
 
         });
+
+    };
+
+    const editMail = (convo) => {
+
+        convo.say('Editar Mail...');
+
+    };
+
+    const newMail = (convo) => {
+
+        convo.say('nuevo Mail...');
 
     };
 
