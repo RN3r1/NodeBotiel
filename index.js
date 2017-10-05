@@ -9,6 +9,15 @@ const bot = new BootBot({
     appSecret:config.get('appSecret')
 });
 
+const mongoose = require('mongoose');
+
+mongoose.connect(config.get('mongoConnection'), {
+    useMongoClient: true,
+    promiseLibrary: global.Promise
+}); //string connection, ip, port, db
+
+const User = require('./mongoose_models/User'); //import the model
+
 function sendStartupMenu(payload, chat) {
 
     const menu_principal = [
@@ -278,12 +287,6 @@ bot.on('postback:MENU_PRINCIPAL_UBICACION', (payload, chat) => {
 
 });
 
-bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
-
-    chat.say('Dentro de suscripcion');
-
-});
-
 bot.on('postback:MENU_PRINCIPAL_LETY', (payload, chat) => {
 
     const sendLetyBio = (convo) => {
@@ -335,7 +338,287 @@ bot.on('postback:MENU_PRINCIPAL_LETY', (payload, chat) => {
 
 bot.on('postback:MENU_PRINCIPAL_EVENTOS', (payload, chat) => {
 
-    chat.say('Dentro de eventos');
+    const eventos = [
+        {
+            "title": "Magna Reunión para Sanar con Ángeles",
+            "image_url": "https://goo.gl/jEy3Tp",
+            "subtitle": "La salud holística a tu alcance",
+            "default_action": {
+                "type": "web_url",
+                "url": "https://www.todoestabien.com.mx",
+            },
+            "buttons": [
+                {
+                    "type": "postback",
+                    "payload": "EVENTO1_INFO",
+                    "title": "Información"
+                }, {
+
+                    "type": "postback",
+                    "title": "Hora y Lugar",
+                    "payload": "EVENTO1_HORA"
+
+                }, {
+                    "type": "postback",
+                    "title": "Inscripción",
+                    "payload": "EVENTO1_INSCRIPCION"
+                }
+            ]
+        }
+    ];
+
+    chat.say('Se acercan estos eventos, ¡No faltes!')
+        .then(chat.sendGenericTemplate(eventos, {
+
+            typing:true
+
+        }));
+
+
+
+});
+
+bot.on('postback:EVENTO1_HORA', (payload, chat) => {
+
+    const sendEventTimeInfo = (convo) => {
+
+        convo.say(emoji.emojify(':date: Fecha: 5 de Noviembre\n:clock10: Hora: 10 a 18 hrs\n:hospital: Lugar: Centro Médico Siglo XXI'))
+            .then(convo.say(emoji.emojify(':round_pushpin: Ubicación del Lugar: https://goo.gl/maps/zs5hDkiu8H32')))
+            .then(() => askIfContinue(convo));
+
+    };
+
+    const askIfContinue = (convo) => {
+
+        const question = {
+            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
+            quickReplies: ['No', 'Sí']
+        };
+
+        const answer = (payload, convo) => {
+            const text = payload.message.text;
+
+            if(text === 'Sí') {
+
+                convo.end();
+                sendStartupMenu(payload, chat);
+
+            } else if(text === 'No') {
+
+                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
+                    .then(convo.end());
+
+            } else {
+
+                convo.say('Lo siento, no entendí tu respuesta.')
+                    .then(() => askIfContinue(convo));
+
+            }
+
+        };
+
+        convo.ask(question, answer);
+
+    };
+
+    chat.conversation((convo) => {
+        sendEventTimeInfo(convo);
+    });
+
+});
+
+bot.on('postback:EVENTO1_INSCRIPCION', (payload, chat) => {
+
+    const sendEventInscriptionInfo = (convo) => {
+
+        convo.say(emoji.emojify('En esta ocasión para apoyar a los que pasaron un mal momento por la tragedia del sismo,' +
+            ' estaremos haciendo acopio de medicinas:syringe:, herramientas:wrench: y cobijas.'))
+            .then(()=>sendMessage2(convo))
+
+    };
+
+    const sendMessage2 = (convo) => {
+
+        convo.say(emoji.emojify('Ahora, en el caso que tú decidas donar una cobija nueva, se te hará un descuento' +
+            ' en tu aportación del 50%.'))
+            .then(() => sendMessage3(convo));
+
+    };
+
+    const sendMessage3 = (convo) => {
+
+        convo.say(emoji.emojify('Asimismo, si eres de los primeros 50 en hacer una donación en especie, Lety ' +
+            'te dará un regalo muy especial para tu 2018, en agradecimiento a tu apoyo.:raised_hands:'))
+            .then(() => sendMessage4(convo));
+
+    };
+
+    const sendMessage4 = (convo) => {
+
+        convo.say(emoji.emojify('La aportación es de $222, recuerda aprovechar las promociones :wink:'))
+            .then(() => sendMessage5(convo));
+
+    };
+
+    const sendMessage5 = (convo) => {
+
+        convo.say(emoji.emojify('Los datos para depositar son:\nCuenta CLABE: 002073560107413492\n' +
+            'No. de Cuenta: 56010741349\nA nombre de Carmen Nery Guzmán.\nSe llama cuenta transfer Banamex.'))
+            .then(() => sendMessage6(convo));
+
+    };
+
+    const sendMessage6 = (convo) => {
+
+        convo.say('En esta ocasión no habrá cuenta para depositar en OXXO.')
+            .then(() => sendMessage7(convo))
+
+    };
+
+    const sendMessage7 = (convo) => {
+
+        convo.say('Recuerda que después de hacer tu depósito debes de enviar por email el recibo.')
+            .then(() => sendMessage8(convo))
+    };
+
+    const sendMessage8 = (convo) => {
+
+        convo.say(emoji.emojify('¡Te esperamos allá! :innocent:'))
+            .then(() => askIfContinue(convo));
+
+    };
+
+    const askIfContinue = (convo) => {
+
+        const question = {
+            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
+            quickReplies: ['No', 'Sí']
+        };
+
+        const answer = (payload, convo) => {
+            const text = payload.message.text;
+
+            if(text === 'Sí') {
+
+                convo.end();
+                sendStartupMenu(payload, chat);
+
+            } else if(text === 'No') {
+
+                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
+                    .then(convo.end());
+
+            } else {
+
+                convo.say('Lo siento, no entendí tu respuesta.')
+                    .then(() => askIfContinue(convo));
+
+            }
+
+        };
+
+        convo.ask(question, answer);
+
+    };
+
+    chat.conversation((convo) => {
+        convo.sendTypingIndicator(1000).then(() => sendEventInscriptionInfo(convo));
+    });
+
+});
+
+bot.on('postback:EVENTO1_INFO', (payload, chat) => {
+
+    const sendEventInfo = (convo) => {
+
+        convo.say(emoji.emojify('Con tiempo para comer, veremos cómo Sanar con Ángeles :angel: y Rodrigo Mejía canalizará a los ' +
+            'seres de luz de Kryon, Gaia y la Madre María :hibiscus:'))
+            .then(() => askIfContinue(convo));
+
+    };
+
+    const askIfContinue = (convo) => {
+
+        const question = {
+            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
+            quickReplies: ['No', 'Sí']
+        };
+
+        const answer = (payload, convo) => {
+            const text = payload.message.text;
+
+            if(text === 'Sí') {
+
+                convo.end();
+                sendStartupMenu(payload, chat);
+
+            } else if(text === 'No') {
+
+                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
+                    .then(convo.end());
+
+            } else {
+
+                convo.say('Lo siento, no entendí tu respuesta.')
+                    .then(() => askIfContinue(convo));
+
+            }
+
+        };
+
+        convo.ask(question, answer);
+
+    };
+
+    chat.conversation((convo) => {
+
+        sendEventInfo(convo);
+
+    });
+
+});
+
+bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
+
+    const getUser = (convo) => {
+
+        let currentUser;
+        convo.getUserProfile().then((user) => {
+
+            User.find({fb_id:user.id}, (err, mUser) => {
+
+                console.log(mUser);
+
+                if(mUser.length !== 0){
+
+                    currentUser = mUser;
+                    //Hay Usuario
+
+                }else{
+
+                    //NO hay usuario
+                    currentUser = new User({
+                        fb_id: user.id,
+                        name: user.first_name + ' ' + user.last_name,
+                        email: 'mail'
+
+                    });
+
+                }
+
+            });
+
+            //Preguntar si crear o editar mail.
+
+        });
+
+    };
+
+    chat.conversation((convo) => {
+
+        getUser(convo);
+
+    })
 
 });
 
