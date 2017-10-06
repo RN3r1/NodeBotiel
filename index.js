@@ -726,7 +726,7 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
 });
 
-bot.hear(['/hola (.*)?/i', '/ola (.*)?/i', '/hey (.*/i)?', '/hi (.*)?/i', '/hello (.*)?/i'], (payload, chat) => {
+bot.hear(['hola', 'ola', 'hey', 'hi'], (payload, chat) => {
 
     chat.conversation((convo) => {
 
@@ -736,13 +736,13 @@ bot.hear(['/hola (.*)?/i', '/ola (.*)?/i', '/hey (.*/i)?', '/hi (.*)?/i', '/hell
 
 });
 
-bot.hear(['/adiós (.*)?/i', '/adios (.*)?/i', '/adiosito (.*)?/i', '/bye (.*)?/i', '/by (.*)?/i'], (payload, chat) => {
+bot.hear(['adiós', 'adios', 'adiosito', 'bye', 'by'], (payload, chat) => {
 
     chat.say(emoji.emojify('Adiós, bendiciones!:angel:'));
 
 });
 
-bot.hear(['/(.*)? ayuda (.*)?/i', '/(.*)? help (.*)?/i', '/(.*)? aiuda (.*)?/i', '/(.*)? alluda (.*)?/i'], (payload,chat) => {
+bot.hear(['ayuda', 'help', 'aiuda', 'alluda'], (payload,chat) => {
 
     chat.say('¿Quieres charlar? Intenta con un hola. :)');
 
