@@ -18,6 +18,8 @@ mongoose.connect(config.get('mongoConnection'), {
 
 const User = require('./mongoose_models/User'); //import the model
 
+let port = $PORT || 5000;
+
 bot.setGreetingText('Hola! Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella, sus cursos, sus talleres y sus actividades.');
 
 bot.setGetStartedButton('GET_STARTED');
@@ -746,4 +748,4 @@ bot.hear(['ayuda', 'help', 'aiuda', 'alluda'], (payload,chat) => {
 
 // bot.deletePersistentMenu();
 
-bot.start();
+bot.start(port);
