@@ -5,8 +5,8 @@
 //  "mongoConnection":"mongodb://localhost:27017/Botiel"
 //}
 {
-  "accessToken":"EAABgfCJweh8BAKxxVRJngAPjBIGGBqq8fhMhiUv33sABjZChpItGOUlTgkCBxWWwKQGQ1K2nnI38bRwzSvmINkugzluZCPwMG8N1YUzfqJppEFh2TjE20AxsyvQnICu4CoFal5oB6hucLSPvJyvhIbL2iKZBs4K43CIQDZCns3entBwh8SZBr",
+  "accessToken":"EAABkZBIXN0JMBAG6NUJMww5aNF5IZBvk70CLsWxRaWinmZBneySjG1poVSp1MOPXOFFZCT5t7BXZCJb7PCxUSMSxwxJHkPux80v4rr1vmCVsYd1bSgHy3HYV47wKDJ3pU2ElqihAJeBIyuyeK2SkZBqQh251ZAGcM1q8cJu3xpXDAe6Dw9JJhfo",
   "verifyToken":"Echobot",
-  "appSecret": "aefb0b4603d98778ffa710751b9c7d8c",
+  "appSecret": "df7fbb045e3627eac339a96b4d8ea607",
   "mongoConnection":"mongodb://rn3r1:.Neri2015*@sandboxcluster-shard-00-00-kyrk5.mongodb.net:27017,sandboxcluster-shard-00-01-kyrk5.mongodb.net:27017,sandboxcluster-shard-00-02-kyrk5.mongodb.net:27017/Botiel?ssl=true&replicaSet=SandboxCluster-shard-0&authSource=admin"
 }
