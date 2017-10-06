@@ -18,7 +18,45 @@ mongoose.connect(config.get('mongoConnection'), {
 
 const User = require('./mongoose_models/User'); //import the model
 
-function sendStartupMenu(payload, chat) {
+bot.setGreetingText('Hola! Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella, sus cursos, sus talleres y sus actividades.');
+
+bot.setGetStartedButton('GET_STARTED');
+
+bot.setPersistentMenu([
+    {
+        title: 'Menú Principal',
+        type: 'postback',
+        payload: 'MENU_INICIO'
+    },
+    {
+        title: 'Todo Está Bien',
+        type: 'nested',
+        call_to_actions: [
+            {
+                title: 'Ir a la página web',
+                type: 'web_url',
+                url: 'https://www.todoestabien.com.mx'
+            },
+            {
+                title: '¿Quién es Lety Neri?',
+                type: 'postback',
+                payload: 'MENU_LETY'
+            },
+            {
+                title: '¿Qué/Quién es Botiel?',
+                type: 'postback',
+                payload: 'MENU_BOTIEL'
+            }
+        ]
+    },
+    {
+        title: 'Ayuda',
+        type: 'postback',
+        payload: 'MENU_AYUDA'
+    }
+], false);
+
+function sendStartupMenu(convo) {
 
     const menu_principal = [
         {
@@ -79,124 +117,60 @@ function sendStartupMenu(payload, chat) {
         }
     ];
 
-    chat.getUserProfile().then((user) => {
+    convo.getUserProfile().then((user) => {
 
-        chat.say(emoji.emojify(`Hola ${user.first_name}. ¿En qué te puedo ayudar hoy? :blush:`));
-        chat.sendGenericTemplate(menu_principal, {
+        convo.say(emoji.emojify(`Hola ${user.first_name}. ¿En qué te puedo ayudar hoy? :blush:`));
+        convo.sendGenericTemplate(menu_principal, {
             typing:true
         });
+        convo.end();
 
     });
 
 }
 
-bot.setGreetingText('Hola! Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella, sus cursos, sus talleres y sus actividades.');
+function sendMenuLety(convo){
 
-bot.setGetStartedButton('GET_STARTED');
-
-bot.setPersistentMenu([
-    {
-        title: 'Todo Está Bien',
-        type: 'nested',
-        call_to_actions: [
-            {
-                title: 'Ir a la página web',
-                type: 'web_url',
-                url: 'https://www.todoestabien.com.mx'
-            },
-            {
-                title: '¿Quién es Lety Neri?',
-                type: 'postback',
-                payload: 'MENU_LETY'
-            },
-            {
-                title: '¿Qué/Quién es Botiel?',
-                type: 'postback',
-                payload: 'MENU_BOTIEL'
-            }
-        ]
-    },
-    {
-        title: 'Ayuda',
-        type: 'postback',
-        payload: 'MENU_AYUDA'
-    }
-], false);
-
-bot.on('postback:MENU_LETY', (payload, chat) => {
-
-    const sendLetyBio = (convo) => {
-
-        convo.say(emoji.emojify('Lety Neri es angelóloga :angel:, numeróloga :100:, terapeuta holística :hibiscus:,' +
-            ' escritora :black_nib:, conferencista :microphone: y es la fundadora de Todo Está Bien'))
-            .then(() => askIfContinue(convo));
-
-    };
-
-    const askIfContinue = (convo) => {
-
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
-
-        const answer = (payload, convo) => {
-            const text = payload.message.text;
-
-            if(text === 'Sí') {
-
-                convo.end();
-                sendStartupMenu(payload, chat);
-
-            } else if(text === 'No') {
-
-                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
-                    .then(convo.end());
-
-            } else {
-
-                convo.say('Lo siento, no entendí tu respuesta.')
-                    .then(() => askIfContinue(convo));
-
-            }
-
-        };
-
-        convo.ask(question, answer);
-
-    };
-
-    chat.conversation((convo) => {
-        sendLetyBio(convo);
-    });
-
-});
-
-bot.on('postback:MENU_BOTIEL', (payload, chat) => {
-
-    const sendBotielBio = (convo) => {
-
-        convo.say(emoji.emojify('Soy Botiel, y soy el ángel virtual :space_invader: de Lety Neri. Estoy diseñado para ayudarte '+
-            'en tareas básicas, aunque aún no soy tan listo como un humano. Si requieres de'+
-            'más ayuda, comunícate al espacio de Todo Está Bien (+52 55 55192018).'))
+    convo.say(emoji.emojify('Lety Neri es angelóloga :angel:, numeróloga :100:, terapeuta holística :hibiscus:,' +
+        ' escritora :black_nib:, conferencista :microphone: y es la fundadora de Todo Está Bien'))
         .then(() => askIfContinue(convo));
 
+}
+
+function sendMenuBotiel(convo){
+
+    convo.say(emoji.emojify('Soy Botiel, y soy el ángel virtual 🤖 de Lety Neri. Estoy diseñado por Blue Infinity Technologies para ayudarte '+
+        'en tareas básicas, aunque aún no soy tan listo como un humano. Si requieres de'+
+        'más ayuda, comunícate al espacio de Todo Está Bien (+52 55 55192018).'))
+        .then(() => askIfContinue(convo));
+
+}
+
+function sendMenuAyuda(convo){
+
+    convo.say(emoji.emojify('Intenta escribir un hola :blush:'));
+    convo.end();
+
+}
+
+function askIfContinue(convo){
+
+    const question = {
+        text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
+        quickReplies: ['No', 'Sí']
     };
 
-    const askIfContinue = (convo) => {
+    const answer = (payload, convo) => {
 
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
+        // console.log(payload);
 
-        const answer = (payload, convo) => {
+        if(payload.message !== undefined){
+
             const text = payload.message.text;
 
             if(text === 'Sí') {
 
-                convo.end();
-                sendStartupMenu(payload, chat);
+                sendStartupMenu(convo);
 
             } else if(text === 'No') {
 
@@ -210,203 +184,34 @@ bot.on('postback:MENU_BOTIEL', (payload, chat) => {
 
             }
 
-        };
+        } else {
 
-        convo.ask(question, answer);
+            let postback = payload.postback.payload;
 
-    };
+            if(postback !== undefined){
 
-    chat.conversation((convo) => {
-        sendBotielBio(convo);
-    });
+                if(postback === 'MENU_LETY'){
 
+                    sendMenuLety(convo);
 
-});
+                } else if(postback === 'MENU_BOTIEL') {
 
-bot.on('postback:MENU_AYUDA', (payload, chat) => {
+                    sendMenuBotiel(convo);
 
-    chat.say(emoji.emojify('Intenta escribir un hola :blush:'));
+                } else if(postback === 'MENU_AYUDA') {
 
-});
+                    sendMenuAyuda(convo);
 
-bot.on('postback:GET_STARTED', (payload, chat) => {
+                } else if(postback === 'MENU_INICIO'){
 
-    chat.say('Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella, sus cursos, sus talleres y sus actividades.');
-    sendStartupMenu(payload, chat);
+                    sendStartupMenu(convo);
 
-});
+                }else {
 
-bot.on('postback:MENU_PRINCIPAL_UBICACION', (payload, chat) => {
+                    convo.say('Lo siento, no entendí tu respuesta.')
+                        .then(() => askIfContinue(convo));
 
-    const sendLocation = (convo) => {
-
-        let ubicacion = 'https://goo.gl/maps/uoLhKX9Q8w92';
-
-        convo.say(emoji.emojify('Aquí podrás ver la ubicación de nuestro centro holístico :house_with_garden:'))
-            .then(convo.say(ubicacion))
-            .then(() => askIfContinue(convo));
-
-    };
-
-    const askIfContinue = (convo) => {
-
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
-
-        const answer = (payload, convo) => {
-            const text = payload.message.text;
-
-            if(text === 'Sí') {
-
-                convo.end();
-                sendStartupMenu(payload, chat);
-
-            } else if(text === 'No') {
-
-                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
-                    .then(convo.end());
-
-            } else {
-
-                convo.say('Lo siento, no entendí tu respuesta.')
-                    .then(() => askIfContinue(convo));
-
-            }
-
-        };
-
-        convo.ask(question, answer);
-
-    };
-
-    chat.conversation((convo) => {
-        sendLocation(convo);
-    });
-
-});
-
-bot.on('postback:MENU_PRINCIPAL_LETY', (payload, chat) => {
-
-    const sendLetyBio = (convo) => {
-
-        convo.say(emoji.emojify('Lety Neri es angelóloga :angel:, numeróloga :100:, terapeuta holística :hibiscus:,' +
-            ' escritora :black_nib:, conferencista :microphone: y es la fundadora de Todo Está Bien'))
-            .then(() => askIfContinue(convo));
-
-    };
-
-    const askIfContinue = (convo) => {
-
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
-
-        const answer = (payload, convo) => {
-            const text = payload.message.text;
-
-            if(text === 'Sí') {
-
-                convo.end();
-                sendStartupMenu(payload, chat);
-
-            } else if(text === 'No') {
-
-                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
-                    .then(convo.end());
-
-            } else {
-
-                convo.say('Lo siento, no entendí tu respuesta.')
-                    .then(() => askIfContinue(convo));
-
-            }
-
-        };
-
-        convo.ask(question, answer);
-
-    };
-
-    chat.conversation((convo) => {
-        sendLetyBio(convo);
-    });
-
-});
-
-bot.on('postback:MENU_PRINCIPAL_EVENTOS', (payload, chat) => {
-
-    const eventos = [
-        {
-            "title": "Magna Reunión para Sanar con Ángeles",
-            "image_url": "https://goo.gl/jEy3Tp",
-            "subtitle": "La salud holística a tu alcance",
-            "default_action": {
-                "type": "web_url",
-                "url": "https://www.todoestabien.com.mx",
-            },
-            "buttons": [
-                {
-                    "type": "postback",
-                    "payload": "EVENTO1_INFO",
-                    "title": "Información"
-                }, {
-
-                    "type": "postback",
-                    "title": "Hora y Lugar",
-                    "payload": "EVENTO1_HORA"
-
-                }, {
-                    "type": "postback",
-                    "title": "Inscripción",
-                    "payload": "EVENTO1_INSCRIPCION"
                 }
-            ]
-        }
-    ];
-
-    chat.say('Se acercan estos eventos, ¡No faltes!')
-        .then(chat.sendGenericTemplate(eventos, {
-
-            typing:true
-
-        }));
-
-
-
-});
-
-bot.on('postback:EVENTO1_HORA', (payload, chat) => {
-
-    const sendEventTimeInfo = (convo) => {
-
-        convo.say(emoji.emojify(':date: Fecha: 5 de Noviembre\n:clock10: Hora: 10 a 18 hrs\n:hospital: Lugar: Centro Médico Siglo XXI'))
-            .then(convo.say(emoji.emojify(':round_pushpin: Ubicación del Lugar: https://goo.gl/maps/zs5hDkiu8H32')))
-            .then(() => askIfContinue(convo));
-
-    };
-
-    const askIfContinue = (convo) => {
-
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
-
-        const answer = (payload, convo) => {
-            const text = payload.message.text;
-
-            if(text === 'Sí') {
-
-                convo.end();
-                sendStartupMenu(payload, chat);
-
-            } else if(text === 'No') {
-
-                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
-                    .then(convo.end());
 
             } else {
 
@@ -415,27 +220,27 @@ bot.on('postback:EVENTO1_HORA', (payload, chat) => {
 
             }
 
-        };
-
-        convo.ask(question, answer);
+        }
 
     };
 
-    chat.conversation((convo) => {
-        sendEventTimeInfo(convo);
-    });
+    convo.ask(question, answer);
 
-});
+}
 
-bot.on('postback:EVENTO1_INSCRIPCION', (payload, chat) => {
+function sendTimeInfoEvent1(convo){
 
-    const sendEventInscriptionInfo = (convo) => {
+    convo.say(emoji.emojify(':date: Fecha: 5 de Noviembre\n:clock10: Hora: 10 a 18 hrs\n:hospital: Lugar: Centro Médico Siglo XXI'))
+        .then(convo.say(emoji.emojify(':round_pushpin: Ubicación del Lugar: https://goo.gl/maps/zs5hDkiu8H32')))
+        .then(() => sendMoreInfoEvent1(convo));
 
-        convo.say(emoji.emojify('En esta ocasión para apoyar a los que pasaron un mal momento por la tragedia del sismo,' +
-            ' estaremos haciendo acopio de medicinas:syringe:, herramientas:wrench: y cobijas.'))
-            .then(()=>sendMessage2(convo))
+}
 
-    };
+function sendInscriptionInfoEvent1(convo){
+
+    convo.say(emoji.emojify('En esta ocasión para apoyar a los que pasaron un mal momento por la tragedia del sismo,' +
+        ' estaremos haciendo acopio de medicinas:syringe:, herramientas:wrench: y cobijas.'))
+        .then(()=>sendMessage2(convo));
 
     const sendMessage2 = (convo) => {
 
@@ -484,95 +289,225 @@ bot.on('postback:EVENTO1_INSCRIPCION', (payload, chat) => {
     const sendMessage8 = (convo) => {
 
         convo.say(emoji.emojify('¡Te esperamos allá! :innocent:'))
+            .then(() => sendMoreInfoEvent1(convo));
+
+    };
+
+}
+
+function sendInfoEvent1(convo){
+
+    convo.say(emoji.emojify('Con tiempo para comer, veremos cómo Sanar con Ángeles :angel: y Rodrigo Mejía canalizará a los ' +
+        'seres de luz de Kryon, Gaia y la Madre María :hibiscus:'))
+        .then(() => sendMoreInfoEvent1(convo));
+
+}
+
+function sendMoreInfoEvent1(main_convo){
+
+    const question = {
+        text: `¿Te gustaría saber más información de este evento?`,
+        quickReplies: ['Salir', 'Ver Información', 'Ver Hora y Lugar', 'Ver Inscripción']
+    };
+
+    const answer = (payload, convo) => {
+
+        let postback = payload.message;
+
+        if(postback !== undefined){
+
+            const text = payload.message.text;
+
+            if(text === 'Salir'){
+
+                askIfContinue(convo);
+
+            } else if(text === 'Ver Información'){
+
+              sendInfoEvent1(convo);
+
+            } else if(text === 'Ver Hora y Lugar'){
+
+                sendTimeInfoEvent1(convo);
+
+            } else if(text === 'Ver Inscripción'){
+
+                sendInscriptionInfoEvent1(convo);
+
+            }else{
+
+                convo.say('Lo siento, no entendi tu respuesta.')
+                    .then(() => sendMoreInfoEvent1(convo));
+
+            }
+
+
+        } else {
+
+          convo.say('Lo siento, no entendi tu respuesta.')
+              .then(() => sendMoreInfoEvent1(convo));
+
+        }
+
+
+    };
+
+    main_convo.ask(question, answer);
+
+}
+
+bot.on('postback:MENU_INICIO', (payload, chat) => {
+
+    chat.conversation((convo) => {
+
+        sendStartupMenu(convo);
+
+    });
+
+});
+
+bot.on('postback:MENU_LETY', (payload, chat) => {
+
+    chat.conversation((convo) => {
+
+        sendMenuLety(convo);
+
+    });
+
+});
+
+bot.on('postback:MENU_BOTIEL', (payload, chat) => {
+
+    chat.conversation((convo) => {
+
+        sendMenuBotiel(convo);
+
+    });
+
+});
+
+bot.on('postback:MENU_AYUDA', (payload, chat) => {
+
+
+    chat.conversation((convo) => {
+
+        sendMenuAyuda(convo);
+
+    });
+
+});
+
+bot.on('postback:GET_STARTED', (payload, chat) => {
+
+    chat.conversation((convo) => {
+
+        convo.say('Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella' +
+            ', sus cursos, sus talleres y sus actividades.');
+        sendStartupMenu(convo);
+
+    });
+
+});
+
+bot.on('postback:MENU_PRINCIPAL_UBICACION', (payload, chat) => {
+
+    const sendLocation = (convo) => {
+
+        let ubicacion = 'https://goo.gl/maps/uoLhKX9Q8w92';
+
+        convo.say(emoji.emojify('Aquí podrás ver la ubicación de nuestro centro holístico :house_with_garden:'))
+            .then(convo.say(ubicacion))
             .then(() => askIfContinue(convo));
 
     };
 
-    const askIfContinue = (convo) => {
+    chat.conversation((convo) => {
+        sendLocation(convo);
+    });
 
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
+});
 
-        const answer = (payload, convo) => {
-            const text = payload.message.text;
+bot.on('postback:MENU_PRINCIPAL_LETY', (payload, chat) => {
 
-            if(text === 'Sí') {
+    const sendLetyBio = (convo) => {
 
-                convo.end();
-                sendStartupMenu(payload, chat);
-
-            } else if(text === 'No') {
-
-                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
-                    .then(convo.end());
-
-            } else {
-
-                convo.say('Lo siento, no entendí tu respuesta.')
-                    .then(() => askIfContinue(convo));
-
-            }
-
-        };
-
-        convo.ask(question, answer);
+        convo.say(emoji.emojify('Lety Neri es angelóloga :angel:, numeróloga :100:, terapeuta holística :hibiscus:,' +
+            ' escritora :black_nib:, conferencista :microphone: y es la fundadora de Todo Está Bien'))
+            .then(() => askIfContinue(convo));
 
     };
 
     chat.conversation((convo) => {
-        convo.sendTypingIndicator(1000).then(() => sendEventInscriptionInfo(convo));
+        sendLetyBio(convo);
+    });
+
+});
+
+bot.on('postback:MENU_PRINCIPAL_EVENTOS', (payload, chat) => {
+
+    const eventos = [
+        {
+            "title": "Magna Reunión para Sanar con Ángeles",
+            "image_url": "https://goo.gl/jEy3Tp",
+            "subtitle": "La salud holística a tu alcance",
+            "default_action": {
+                "type": "web_url",
+                "url": "https://www.todoestabien.com.mx",
+            },
+            "buttons": [
+                {
+                    "type": "postback",
+                    "payload": "EVENTO1_INFO",
+                    "title": "Información"
+                }, {
+
+                    "type": "postback",
+                    "title": "Hora y Lugar",
+                    "payload": "EVENTO1_HORA"
+
+                }, {
+                    "type": "postback",
+                    "title": "Inscripción",
+                    "payload": "EVENTO1_INSCRIPCION"
+                }
+            ]
+        }
+    ];
+
+    chat.say('Se acercan estos eventos, ¡No faltes!')
+        .then(chat.sendGenericTemplate(eventos, {
+
+            typing:true
+
+        }));
+
+});
+
+bot.on('postback:EVENTO1_HORA', (payload, chat) => {
+
+    chat.conversation((convo)=>{
+
+        sendTimeInfoEvent1(convo);
+
+    });
+
+});
+
+bot.on('postback:EVENTO1_INSCRIPCION', (payload, chat) => {
+
+    chat.conversation((convo) => {
+
+        sendInscriptionInfoEvent1(convo);
+
     });
 
 });
 
 bot.on('postback:EVENTO1_INFO', (payload, chat) => {
 
-    const sendEventInfo = (convo) => {
-
-        convo.say(emoji.emojify('Con tiempo para comer, veremos cómo Sanar con Ángeles :angel: y Rodrigo Mejía canalizará a los ' +
-            'seres de luz de Kryon, Gaia y la Madre María :hibiscus:'))
-            .then(() => askIfContinue(convo));
-
-    };
-
-    const askIfContinue = (convo) => {
-
-        const question = {
-            text: emoji.emojify('¿Te puedo ayudar en algo más? :blush:'),
-            quickReplies: ['No', 'Sí']
-        };
-
-        const answer = (payload, convo) => {
-            const text = payload.message.text;
-
-            if(text === 'Sí') {
-
-                convo.end();
-                sendStartupMenu(payload, chat);
-
-            } else if(text === 'No') {
-
-                convo.say(emoji.emojify('Adiós, bendiciones!:angel:'))
-                    .then(convo.end());
-
-            } else {
-
-                convo.say('Lo siento, no entendí tu respuesta.')
-                    .then(() => askIfContinue(convo));
-
-            }
-
-        };
-
-        convo.ask(question, answer);
-
-    };
-
     chat.conversation((convo) => {
 
-        sendEventInfo(convo);
+        sendInfoEvent1(convo);
 
     });
 
@@ -589,7 +524,7 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
                 if(mUser.length !== 0){
 
-                    currentUser = mUser;
+                    currentUser = mUser[0];
                     //Hay Usuario
 
                 }else{
@@ -604,23 +539,19 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
                 }
 
-                console.log('Encontré usuario! '+mUser);
-
                 convo.set('user', currentUser);
 
             }).then(() => {
 
-                //TODO Preguntar si crear o editar mail.
-
-                console.log('Funciona? '+convo.get('user'));
-
                 if(currentUser.email === 'mail'){
 
+                    // console.log('Nuevo Usuario');
                     newMail(convo);
 
                 }else{
 
-                    editMail(convo);
+                    // console.log('Usuario existente');
+                    askEditMail(convo);
 
                 }
 
@@ -632,15 +563,154 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
     };
 
+    const askEditMail = (convo) => {
+
+        let user = convo.get('user');
+
+        // console.log(user);
+
+        const question = {
+            text: emoji.emojify('Ya tienes este mail registrado: '+user.email+', ¿te gustaría editarlo?'),
+            quickReplies: ['No', 'Sí']
+        };
+
+        const answer = (payload, convo) => {
+
+            if(payload.message !== undefined){
+
+                const text = payload.message.text;
+
+                if(text === 'Sí') {
+
+                    askForEditedMail(convo);
+
+                } else if(text === 'No') {
+
+                    askIfContinue(payload, chat, convo);
+
+                } else {
+
+                    convo.say('Lo siento, no entendí tu respuesta.')
+                        .then(() => askEditMail(convo));
+
+                }
+
+            } else {
+
+                convo.say('Lo siento, no entendí tu respuesta.')
+                    .then(() => askEditMail(convo));
+
+            }
+
+        };
+
+        convo.ask(question, answer);
+
+    };
+
+    const askForEditedMail = (convo) => {
+
+        convo.ask('Por favor escribe el email en el que te gustaría recibir la información', (payload, convo, data) => {
+
+            if(payload.message !== undefined){
+
+                const text = payload.message.text;
+
+                if(typeof text === 'string'){
+
+                    convo.set('editedEmail', text);
+                    editMail(convo);
+
+                }else{
+
+                    convo.say('Lo siento, no entendí tu respuesta.').then(() => askForEditedMail(convo));
+
+                }
+
+            } else {
+
+                convo.say('Lo siento, no entendí tu respuesta.').then(() => askForEditedMail(convo));
+
+            }
+
+        });
+
+    };
+
     const editMail = (convo) => {
 
-        convo.say('Editar Mail...');
+        let user = convo.get('user');
+        let newMail = convo.get('editedEmail');
+
+        const question = {
+            text: emoji.emojify('¿Confirmar '+newMail+'?'),
+            quickReplies: ['Cancelar', 'Editar', 'Sí']
+        };
+
+        const answer = (payload, convo) => {
+
+            if(payload.message !== undefined){
+
+                const text = payload.message.text;
+
+                if(text === 'Sí') {
+
+                    user.email = newMail;
+                    convo.set('user', user);
+                    saveEditedMail(convo);
+
+                } else if(text === 'Editar') {
+
+                    askForEditedMail(convo);
+
+                } else if(text === 'Cancelar'){
+
+                    askIfContinue(convo);
+
+                } else {
+
+                    convo.say('Lo siento, no entendí tu respuesta.')
+                        .then(() => editMail(convo));
+
+                }
+
+            } else {
+
+                convo.say('Lo siento, no entendí tu respuesta.')
+                    .then(() => editMail(convo));
+
+            }
+
+
+        };
+
+
+
+        convo.ask(question, answer);
 
     };
 
     const newMail = (convo) => {
 
-        convo.say('nuevo Mail...');
+        askForEditedMail(convo);
+
+    };
+
+    const saveEditedMail = (convo) => {
+
+        let user = convo.get('user');
+
+        user.save(function (err) {
+
+            if(err){
+                convo.say('Hubo un error al editar el email, por favor intenta más tarde.');
+                return console.log('Algo se rompió '+err)
+            }
+
+            convo.say('Email guardado con éxito')
+                .then(() => askIfContinue(convo))
+
+        });
 
     };
 
@@ -654,40 +724,25 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
 bot.hear(['hola', 'ola', 'hey', 'hi'], (payload, chat) => {
 
-    sendStartupMenu(payload, chat);
+    chat.conversation((convo) => {
+
+        sendStartupMenu(convo);
+
+    });
 
 });
 
-// bot.hear('ask me something', (payload, chat) => {
-//
-//     const askName = (convo) => {
-//         convo.ask(`What's your name?`, (payload, convo) => {
-//             const text = payload.message.text;
-//             convo.set('name', text);
-//             convo.say(`Oh, your name is ${text}`).then(() => askFavoriteFood(convo));
-//         });
-//     };
-//
-//     const askFavoriteFood = (convo) => {
-//         convo.ask(`What's your favorite food?`, (payload, convo) => {
-//             const text = payload.message.text;
-//             convo.set('food', text);
-//             convo.say(`Got it, your favorite food is ${text}`).then(() => sendSummary(convo));
-//         });
-//     };
-//
-//     const sendSummary = (convo) => {
-//         convo.say(`Ok, here's what you told me about you:
-// 	      - Name: ${convo.get('name')}
-// 	      - Favorite Food: ${convo.get('food')}`);
-//         convo.end();
-//     };
-//
-//     chat.conversation((convo) => {
-//         askName(convo);
-//     });
-//
-// });
+bot.hear(['adiós', 'adios', 'adiosito', 'bye', 'by'], (payload, chat) => {
+
+    chat.say(emoji.emojify('Adiós, bendiciones!:angel:'));
+
+});
+
+bot.hear(['ayuda', 'help', 'aiuda', 'alluda'], (payload,chat) => {
+
+    chat.say('¿Quieres charlar? Intenta con un hola. :)');
+
+});
 
 // bot.deletePersistentMenu();
 
