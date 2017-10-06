@@ -19,22 +19,8 @@ mongoose.connect(config.get('mongoConnection'), {
 const User = require('./mongoose_models/User'); //import the model
 
 const express = require('express');
-const app = express();
 
 let port = process.env.PORT || 3000;
-
-app.get('/', function(req, res){
-
-    res.send('yaaaa');
-
-});
-
-app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === config.get('verifyToken')) {
-        res.send(req.query['hub.challenge'])
-    }
-    res.send('Error, wrong token')
-});
 
 bot.setGreetingText('Hola! Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella, sus cursos, sus talleres y sus actividades.');
 
@@ -761,11 +747,5 @@ bot.hear(['ayuda', 'help', 'aiuda', 'alluda'], (payload,chat) => {
     chat.say('¿Quieres charlar? Intenta con un hola. :)');
 
 });
-
-// bot.deletePersistentMenu();
-
-// app.listen(port, function () {
-//    console.log('Corriendo en '+port);
-// });
 
 bot.start(port);
