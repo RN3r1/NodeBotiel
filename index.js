@@ -29,6 +29,13 @@ app.get('/', function(req, res){
 
 });
 
+app.get('/webhook/', function (req, res) {
+    if (req.query['hub.verify_token'] === config.get('verifyToken')) {
+        res.send(req.query['hub.challenge'])
+    }
+    res.send('Error, wrong token')
+});
+
 bot.setGreetingText('Hola! Soy Botiel, soy el ángel virtual de Lety Neri. Conmigo podrás obtener información acerca de ella, sus cursos, sus talleres y sus actividades.');
 
 bot.setGetStartedButton('GET_STARTED');
@@ -757,8 +764,8 @@ bot.hear(['ayuda', 'help', 'aiuda', 'alluda'], (payload,chat) => {
 
 // bot.deletePersistentMenu();
 
-app.listen(port, function () {
-   console.log('Corriendo en '+port);
-});
+// app.listen(port, function () {
+//    console.log('Corriendo en '+port);
+// });
 
-bot.start();
+bot.start(port);
