@@ -1,12 +1,14 @@
-{
-  "accessToken":"EAABgfCJweh8BABYdB1ZC8b8SBKbj1Op81bDkrk9qsEhmEe77ilx7xFczaICtsjPLpNBxipfX6CUAagvuqYaZBAM0QXONimPzRxoZCjMpOT6uzYr7IvXRH2ZCU0Eh4bM9gztY7OW8qsaVBE2nHJNfyQFZBtLCeJyuGuGbtee5y4Oa7ZAHr8KAJT",
-  "verifyToken":"Echobot",
-  "appSecret": "aefb0b4603d98778ffa710751b9c7d8c",
-  "mongoConnection":"mongodb://localhost:27017/Botiel"
-}
+//DESARROLLO
 //{
-//  "accessToken":"EAABkZBIXN0JMBAG6NUJMww5aNF5IZBvk70CLsWxRaWinmZBneySjG1poVSp1MOPXOFFZCT5t7BXZCJb7PCxUSMSxwxJHkPux80v4rr1vmCVsYd1bSgHy3HYV47wKDJ3pU2ElqihAJeBIyuyeK2SkZBqQh251ZAGcM1q8cJu3xpXDAe6Dw9JJhfo",
+//  "accessToken":"EAABgfCJweh8BABYdB1ZC8b8SBKbj1Op81bDkrk9qsEhmEe77ilx7xFczaICtsjPLpNBxipfX6CUAagvuqYaZBAM0QXONimPzRxoZCjMpOT6uzYr7IvXRH2ZCU0Eh4bM9gztY7OW8qsaVBE2nHJNfyQFZBtLCeJyuGuGbtee5y4Oa7ZAHr8KAJT",
 //  "verifyToken":"Echobot",
-//  "appSecret": "df7fbb045e3627eac339a96b4d8ea607",
-//  "mongoConnection":"mongodb://rn3r1:.Neri2015*@sandboxcluster-shard-00-00-kyrk5.mongodb.net:27017,sandboxcluster-shard-00-01-kyrk5.mongodb.net:27017,sandboxcluster-shard-00-02-kyrk5.mongodb.net:27017/Botiel?ssl=true&replicaSet=SandboxCluster-shard-0&authSource=admin"
+//  "appSecret": "aefb0b4603d98778ffa710751b9c7d8c",
+//  "mongoConnection":"mongodb://localhost:27017/Botiel"
 //}
+//PRODUCCION
+{
+  "accessToken":"EAABkZBIXN0JMBAG6NUJMww5aNF5IZBvk70CLsWxRaWinmZBneySjG1poVSp1MOPXOFFZCT5t7BXZCJb7PCxUSMSxwxJHkPux80v4rr1vmCVsYd1bSgHy3HYV47wKDJ3pU2ElqihAJeBIyuyeK2SkZBqQh251ZAGcM1q8cJu3xpXDAe6Dw9JJhfo",
+  "verifyToken":"Echobot",
+  "appSecret": "df7fbb045e3627eac339a96b4d8ea607",
+  "mongoConnection":"mongodb://rn3r1:.Neri2015*@sandboxcluster-shard-00-00-kyrk5.mongodb.net:27017,sandboxcluster-shard-00-01-kyrk5.mongodb.net:27017,sandboxcluster-shard-00-02-kyrk5.mongodb.net:27017/Botiel?ssl=true&replicaSet=SandboxCluster-shard-0&authSource=admin"
+}
