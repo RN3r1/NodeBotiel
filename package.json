@@ -9,6 +9,9 @@
   },
   "author": "Blue Infinity Technologies - Rodrigo Medina",
   "license": "ISC",
+  "engines": {
+    "node":"8.6.0"
+  },
   "dependencies": {
     "bootbot": "^1.0.12",
     "config": "^1.26.2",
