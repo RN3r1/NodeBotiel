@@ -590,7 +590,7 @@ bot.on('postback:MENU_PRINCIPAL_SUSCRIPCION', (payload, chat) => {
 
                 } else if(text === 'No') {
 
-                    askIfContinue(payload, chat, convo);
+                    askIfContinue(convo);
 
                 } else {
 
