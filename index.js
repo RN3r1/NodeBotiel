@@ -234,7 +234,7 @@ function askIfContinue(convo){
 
 function sendTimeInfoEvent1(convo){
 
-    convo.say(emoji.emojify(':date: Fecha: 16 de Diciembre\n:clock10: Hora: 10 a 20 hrs\n:hospital: Lugar: Centro Médico Siglo XXI. Salón 3 de la Planta Baja'))
+    convo.say(emoji.emojify(':date: Fecha: 9 y 10 de Diciembre\n:clock10: Hora: 10 a 20 hrs\n:hospital: Lugar: Centro Médico Siglo XXI. Salón 3 de la Planta Baja'))
         .then(convo.say(emoji.emojify(':round_pushpin: Ubicación del Lugar: https://goo.gl/maps/zs5hDkiu8H32')))
         .then(() => sendMoreInfoEvent1(convo));
 
