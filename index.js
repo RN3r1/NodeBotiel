@@ -65,7 +65,7 @@ function sendStartupMenu(convo) {
     const menu_principal = [
         {
             "title": "Información",
-            "image_url": "https://imgur.com/a/igIRT",
+            "image_url": "https://i.imgur.com/0cW9P4p.jpg",
             "subtitle": "¿Quiénes somos?",
             "default_action": {
                 "type": "web_url",
