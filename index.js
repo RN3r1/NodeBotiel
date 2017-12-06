@@ -65,7 +65,7 @@ function sendStartupMenu(convo) {
     const menu_principal = [
         {
             "title": "Información",
-            "image_url": "https://i.imgur.com/0cW9P4p.jpg",
+            "image_url": "https://i.imgur.com/w5fLVlP.jpg",
             "subtitle": "¿Quiénes somos?",
             "default_action": {
                 "type": "web_url",
@@ -89,7 +89,7 @@ function sendStartupMenu(convo) {
         },
         {
             "title": "Suscripción a nuestro boletín",
-            "image_url": "https://goo.gl/TTsv7b",
+            "image_url": "https://i.imgur.com/jLCJGLU.png",
             "subtitle": "Registra tu correo para poder recibir rituales, mensajes angelicales, y más!",
             "default_action": {
                 "type": "web_url",
@@ -105,7 +105,7 @@ function sendStartupMenu(convo) {
         },
         {
             "title": "Eventos",
-            "image_url": "https://goo.gl/RwyVcX",
+            "image_url": "https://i.imgur.com/heWniae.jpg",
             "subtitle": "Acompáñanos en nuestros eventos",
             "default_action": {
                 "type": "web_url",
@@ -234,7 +234,7 @@ function askIfContinue(convo){
 
 function sendTimeInfoEvent1(convo){
 
-    convo.say(emoji.emojify(':date: Fecha: 5 de Noviembre\n:clock10: Hora: 10 a 18 hrs\n:hospital: Lugar: Centro Médico Siglo XXI'))
+    convo.say(emoji.emojify(':date: Fecha: 16 de Diciembre\n:clock10: Hora: 10 a 20 hrs\n:hospital: Lugar: Centro Médico Siglo XXI. Salón 3 de la Planta Baja'))
         .then(convo.say(emoji.emojify(':round_pushpin: Ubicación del Lugar: https://goo.gl/maps/zs5hDkiu8H32')))
         .then(() => sendMoreInfoEvent1(convo));
 
@@ -242,55 +242,10 @@ function sendTimeInfoEvent1(convo){
 
 function sendInscriptionInfoEvent1(convo){
 
-    convo.say(emoji.emojify('En esta ocasión para apoyar a los que pasaron un mal momento por la tragedia del sismo,' +
-        ' estaremos haciendo acopio de medicinas:syringe:, herramientas:wrench: y cobijas.'))
+    convo.say(emoji.emojify('Para poder asistir al evento, bastará unicamente asistir al lugar y hacer tu pago en la recepción. Aportación de $50 por día.'))
         .then(()=>sendMessage2(convo));
 
     const sendMessage2 = (convo) => {
-
-        convo.say(emoji.emojify('Ahora, en el caso que tú decidas donar una cobija nueva, se te hará un descuento' +
-            ' en tu aportación del 50%.'))
-            .then(() => sendMessage3(convo));
-
-    };
-
-    const sendMessage3 = (convo) => {
-
-        convo.say(emoji.emojify('Asimismo, si eres de los primeros 50 en hacer una donación en especie, Lety ' +
-            'te dará un regalo muy especial para tu 2018, en agradecimiento a tu apoyo.:raised_hands:'))
-            .then(() => sendMessage4(convo));
-
-    };
-
-    const sendMessage4 = (convo) => {
-
-        convo.say(emoji.emojify('La aportación es de $222, recuerda aprovechar las promociones :wink:'))
-            .then(() => sendMessage5(convo));
-
-    };
-
-    const sendMessage5 = (convo) => {
-
-        convo.say(emoji.emojify('Los datos para depositar son:\nCuenta CLABE: 002073560107413492\n' +
-            'No. de Cuenta: 56010741349\nA nombre de Carmen Nery Guzmán.\nSe llama cuenta transfer Banamex.'))
-            .then(() => sendMessage6(convo));
-
-    };
-
-    const sendMessage6 = (convo) => {
-
-        convo.say('En esta ocasión no habrá cuenta para depositar en OXXO.')
-            .then(() => sendMessage7(convo))
-
-    };
-
-    const sendMessage7 = (convo) => {
-
-        convo.say('Recuerda que después de hacer tu depósito debes de enviar por email el recibo.')
-            .then(() => sendMessage8(convo))
-    };
-
-    const sendMessage8 = (convo) => {
 
         convo.say(emoji.emojify('¡Te esperamos allá! :innocent:'))
             .then(() => sendMoreInfoEvent1(convo));
@@ -301,9 +256,15 @@ function sendInscriptionInfoEvent1(convo){
 
 function sendInfoEvent1(convo){
 
-    convo.say(emoji.emojify('Con tiempo para comer, veremos cómo Sanar con Ángeles :angel: y Rodrigo Mejía canalizará a los ' +
-        'seres de luz de Kryon, Gaia y la Madre María :hibiscus:'))
-        .then(() => sendMoreInfoEvent1(convo));
+    convo.say(emoji.emojify('Este será nuestro fabuloso programa. Ven a compartr con nosotros!'))
+        .then(() => sendSchedule(convo));
+
+    const sendSchedule = (convo) => {
+
+        convo.sendAttachment('image', 'https://i.imgur.com/RnqO5y7.jpg')
+            .then(() => sendMoreInfoEvent1(convo));
+
+    };
 
 }
 
@@ -451,9 +412,9 @@ bot.on('postback:MENU_PRINCIPAL_EVENTOS', (payload, chat) => {
 
     const eventos = [
         {
-            "title": "Magna Reunión para Sanar con Ángeles",
-            "image_url": "https://goo.gl/jEy3Tp",
-            "subtitle": "La salud holística a tu alcance",
+            "title": "6to Festival Navideño Todo Está Bien",
+            "image_url": "https://i.imgur.com/vg7o17J.png",
+            "subtitle": "Ven a compartir el espíritu de la Navidad con nostros",
             "default_action": {
                 "type": "web_url",
                 "url": "https://www.todoestabien.com.mx",
